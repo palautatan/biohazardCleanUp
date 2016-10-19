@@ -8,6 +8,8 @@ avoid biohazards with well-crafted bioinformatics scripts (in the making) ... av
 # alignmentDiffs.py
 > take two alignments as a text file and check if they're "pretty much" the same or not
 
+> helpful when you are parsing trees for duplicate taxa
+
 > script usage:
 1. test this out with the alignmentDiffsTesting.txt file /
 2. try it with nexus files
@@ -21,6 +23,10 @@ avoid biohazards with well-crafted bioinformatics scripts (in the making) ... av
 
 # captureRogueFiles.py
 > takes files named by patterns and categorizes them into folder
+
+> helpful when you forgot to put your output into folders
+
+> sounds like a stupid mistake, but if you don't want to rerun your code, this is your fix
 
 > script usage:
 1. change the list "criteria" to reflect patterns you want to find /
