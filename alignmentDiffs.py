@@ -1,7 +1,7 @@
-# alignDiffs Version 2
-
-# Edie Espejo
-# 14 July 2016
+###########################
+## ALIGNMENT DIFFERENCES ##
+## 2016-07-14            ##
+###########################
 
 # Goal: Make a program that reads in two species from some alignment
 #         We want to know if these species are likely the same species
