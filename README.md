@@ -4,22 +4,22 @@ avoid biohazards with well-crafted bioinformatics scripts (in the making) ... av
 # alignmentDiffs.py
 > take two alignments as a text file and check if they're "pretty much" the same or not
 
-> script deficiencies:
+> script deficiencies
 does not work with all alignments yet
 should be able to take in a whole .nex, .fasta, .phy file but may not
 needs a more decisive factor on what is "the same"
                        
-> brings up question:
+> brings up question
 how similar must your genetics be in order to be the "same species"?
 
 # captureRogueFiles.py
 > takes files named by patterns and categorizes them into folder
 
-> script usage:
+> script usage
 change the list "criteria" to reflect patterns you want to find
 change directories and directory names to reflect your folders
 i.e. rb_files contains my named files, studies contains the folders i want to create
 
-> script deficiencies:
+> script deficiencies
 would be better if written as a function
 does not work if a file does not exist
