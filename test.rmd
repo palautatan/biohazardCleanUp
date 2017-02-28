@@ -1,0 +1,271 @@
+---
+title: "STA138 HW6"
+author: "Chad Pickering"
+date: "March 1, 2017"
+output: pdf_document
+---
+
+##### 1. Online you will find a dataset flu.csv. The columns we are interested in are shot (1 indicates flu shot, 0 indicates no flu shot), and age (the age of the subject). There are
+additional columns we will not use (yet).
+
+Part a: Fit the logistic regression model and write down the estimated logistic regression function.
+
+```{r}
+flu <- read.csv("flu.csv")
+logit.model <- glm(formula = shot ~ age, family = binomial(logit), data = flu)
+logit.model$coefficients
+```
+
+The estimated logistic regression function: $ logit(\pi(x)) = -8.7433 + 0.1087x $.
+
+
+Part b: Using part a, estimate the probability that a 55 year old will get the flu shot.
+
+```{r}
+logit.model$fitted[which(flu$age==55)]
+```
+
+The probability of a 55 year old getting a flu shot is approximately 0.05937.
+
+
+Part c: Based on the sign of $ \beta_{1} $, as your age increases does the probability of a 
+flu shot go up or down?
+
+As age (X) increases, the probability of getting a flu shot increases; we can easily see this as $ \beta_{1} $ is positive.
+
+
+Part d: Interpret the value of $ exp(\beta_{1}) $.
+
+```{r}
+exp_beta1 <- exp(0.1087366)
+exp_beta1
+```
+
+As age increases by one unit, the odds of getting a flu shot increases by about 11.48%.
+
+
+##### 2. Continue with question 1.
+
+part a. For what age is the probability of a flu shot 0.50?
+
+```{r}
+-logit.model$coefficients[1]/logit.model$coefficients[2]
+```
+
+c
+
+part b. Plot the logistic curve and display it. Does there seem to be a large effect of age on the probability of a flu shot?
+
+```{r}
+plot(flu$age, logit.model$fitted.values)
+curve(predict(logit.model, data.frame(age=x), type="response"), add=TRUE) 
+```
+
+Since the slope of the above plot is not steep and does not change abruptly, we can say that age does not have a large effect on whether one gets a flu shot.
+
+
+part c. Does $ \alpha$ have a practical meaning in this case? Explain.
+
+In this case, the probability of getting a flu shot at age = 0 does not have a practical meaning. Typically, $ \alpha $ does not have a practical meaning, and in this case, this remains true.
+
+
+part d. Would it make sense to predict the probability of a flu shot for someone aged 12 based on this data set? Explain.
+
+Since the minimum age represented in this dataset is 48, extrapolating to predict the probability of a flu shot for someone aged 12 should not be done.
+
+
+##### 3. Continue with question 1.
+
+part a. Find the Wald and LR test-statistic for testing if $ \beta_{1} = 0 $.
+
+```{r}
+# Wald t.s.
+summary(logit.model)$coefficients[2,3]
+```
+
+```{r}
+# Likelihood ratio t.s.
+smaller.model = glm(shot ~ 1, family = binomial(logit), data = flu)
+lrt <- as.numeric(-2*(logLik(smaller.model) - logLik(logit.model)))
+lrt
+```
+
+
+part b. Find the p-values for the test-statistics in (a).
+
+```{r}
+# Wald t.s. p-val
+summary(logit.model)$coefficients[2,4]
+```
+
+```{r}
+# LRT p-val
+lrt_df <- length(logit.model$coefficients) - length(smaller.model$coefficients)
+pchisq(lrt, lrt_df, lower.tail = FALSE)
+```
+
+
+part c. Interpret one of the p-values in (b) in terms of the
+problem.
+
+Given that $ \beta_{1} = 0 $ (age is not an effect on getting a flu shot), there is a 7.0837e-05 probability of obtaining our data/test statistic or a more extreme one.
+
+
+part d. State the conclusion of the hypothesis test in terms
+of the problem.
+
+There is significant evidence that age has an effect on the probability of getting a flu shot at any $ \alpha \geq 0.01 $ because the p-value is much less than 0.01.
+
+
+part e. Find the 99% LR confidence interval for $ \beta_{1} $, and interpret it in terms of the problem.
+
+```{r}
+suppressMessages(confint(logit.model, level = 0.99)[2,])
+```
+
+We are 99% confident that the true log-odds for flu shot administration is between 0.0424 and 0.1857 for a one-unit increase in age. Converting to odds, we are 99% confident that the odds for flu shot administration is between 1.0433 and 1.2041 for a one-unit increase in age.
+
+
+##### 4. Online you will find a dataset CHD.csv. The columns we are interested in are CHD (1 indicates coronary heart disease (CHD), 0 indicates no CHD), and age (the age of the subject).
+
+part a. Fit the logistic regression model and write down the estimated logistic-regression function.
+
+```{r}
+chd <- read.csv("cheart.csv")
+logit.model <- glm(formula = CHD ~ AGE, family = binomial(logit), data = chd)
+logit.model$coefficients
+```
+
+The estimated logistic regression function: $ logit(\pi(x)) = -5.3095 + 0.1109x $.
+
+
+part b. Using (a), estimate the probability that a 69 year old will have CHD.
+
+```{r}
+logit.model$fitted[which(chd$AGE==69)]
+```
+
+The probability that a 69 year old has CHD is about 0.9125.
+
+
+part c. Based on the sign of $ \beta_{1} $, as your age increases does the probability of CHD go up or down?
+
+As age (X) increases, the probability of CHD increases; we can easily see this as $ \beta_{1} $ is positive.
+
+
+part d. Interpret the value of exp($ \beta_{1} $).
+
+```{r}
+exp_beta1 <- exp(0.1109211)
+exp_beta1
+```
+
+As age increases by one unit, the odds of getting CHD increases by about 11.73%.
+
+
+##### 5. Continue with question 4.
+
+part a. For what age is the probability of CHD 0.80?
+
+```{r}
+(log(0.8/(1-0.8))-logit.model$coefficients[1])/logit.model$coefficients[2]
+```
+
+The age 60.3649 is the threshold at which the probability of getting a flu shot is 0.8.
+
+
+part b. Plot the logistic curve and display it. Does there seem to be a large effect of age on the probability of CHD?
+
+```{r}
+plot(chd$AGE, logit.model$fitted.values)
+curve(predict(logit.model, data.frame(AGE=x), type="response"), add=TRUE)
+```
+
+Since the slope of the above plot is not steep and does not change abruptly, we can say that age does not have a large effect on whether one gets CHD.
+
+
+part c. Does $ \alpha$ have a practical meaning in this case? Explain.
+
+In this case, the probability of getting CHD at age = 0 does not have a practical meaning. Typically, $ \alpha $ does not have a practical meaning, and in this case, this remains true.
+
+
+part d. Would it make sense to predict the probability of CHD for someone aged 44 based on this data set? Explain.
+
+Yes, as the minimum age in the dataset is 20 and the maximum age in the dataset is 69, and 44 falls within this interval, we can interpolate and predict the probability.
+
+
+#####6. Continue with question 4.
+
+part a. Find the Wald and LR test-statistic for testing if $ \beta = 0 $.
+
+```{r}
+# Wald t.s.
+summary(logit.model)$coefficients[2,3]
+```
+
+```{r}
+# Likelihood ratio t.s.
+smaller.model = glm(CHD ~ 1, family = binomial(logit), data = chd)
+lrt <- as.numeric(-2*(logLik(smaller.model) - logLik(logit.model)))
+lrt
+```
+
+
+part b. Find the p-values for the test-statistics in (a).
+
+```{r}
+# Wald t.s. p-val
+summary(logit.model)$coefficients[2,4]
+```
+
+```{r}
+# LRT p-val
+lrt_df <- length(logit.model$coefficients) - length(smaller.model$coefficients)
+pchisq(lrt, lrt_df, lower.tail = FALSE)
+```
+
+
+part c. Interpret one of the p-values in (b) in terms of the problem.
+
+Given that $ \beta_{1} = 0 $ (age has no effect on CHD), there is a 4.0224e-06 probability of obtaining our data/test statistic or a more extreme one.
+
+
+part d. State the conclusion of the hypothesis test in terms of the problem.
+
+There is significant evidence that age has an effect on the probability of getting CHD at any $ \alpha \geq 0.01 $ because the p-value is much less than 0.01.
+
+
+part e. Find the 90% LR confidence interval for exp($ \beta_{1} $), and interpret it in terms of the problem.
+
+```{r}
+exp(suppressMessages(confint(logit.model, level = 0.9)[2,]))
+```
+
+We are 90% confident that the odds for getting CHD is between 1.0764 and 1.1656 for a one-unit increase in age.
+
+
+#####7. Answer the following with TRUE or FALSE. It is good practice to explain your answer.
+
+part a. If the confidence interval for exp($ \beta_{1} $) contains 1, it suggests no influence of $ X_1 $ on the odds of the trait (Y = 1).
+
+TRUE. If the CI contains 1, it suggests no influence of X on the odds of the trait.
+
+
+part b. exp($ \beta_{1} $) gives the estimate for the odds of the trait (Y = 1).
+
+TRUE. This is a correct interpretation of exp($ \beta_{1} $) with regards to the trait being predicted (from lecture notes).
+
+
+part c. $ \alpha $ always has a practical interpretation.
+
+FALSE. The $ \alpha $ is the odds of the presence of the trait when X = 0; this typically has no practical interpretation.
+
+
+part d. If we fail to reject H0 : $ \beta_{1} $ = 0, we conclude that X1 does not affect the probability of the trait.
+
+TRUE. If we do not reject Ho, the X variable has no effect on Y.
+
+
+
+
+
