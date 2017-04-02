@@ -1,5 +1,5 @@
 # biohazardCleanUp
-avoid biohazards with well-crafted bioinformatics scripts (in the making) ... available in python for now. I'll get to doing some R translations another time if I find them necessary.
+Avoid biohazards with well-crafted bioinformatics scripts (in the making) ... available in python for now. I'll get to doing some R translations another time if I find them necessary.
 
 ## Table of Contents
 1. alignDiffs
